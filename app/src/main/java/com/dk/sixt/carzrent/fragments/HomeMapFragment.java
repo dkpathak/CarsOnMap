@@ -27,7 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.dk.sixt.carzrent.BuildConfig;
-import com.dk.sixt.carzrent.MainActivity;
+import com.dk.sixt.carzrent.activity.MainActivity;
 import com.dk.sixt.carzrent.R;
 import com.dk.sixt.carzrent.models.Cars;
 import com.google.android.gms.common.api.ApiException;

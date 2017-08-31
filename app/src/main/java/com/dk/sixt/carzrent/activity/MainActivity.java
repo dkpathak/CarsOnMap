@@ -1,8 +1,10 @@
-package com.dk.sixt.carzrent;
+package com.dk.sixt.carzrent.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -11,13 +13,13 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
+import com.dk.sixt.carzrent.BuildConfig;
+import com.dk.sixt.carzrent.R;
 import com.dk.sixt.carzrent.apis.ApiInterface;
 import com.dk.sixt.carzrent.apis.ApiManager;
 import com.dk.sixt.carzrent.fragments.HomeListFragment;
@@ -62,16 +64,32 @@ public class MainActivity extends AppCompatActivity implements HomeListFragment.
     };
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getData();
+        if(isOnline())
+            getData();
+        else{
+            showSnackbar(R.string.network_error, R.string.retry, new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getData();
+                }
+            });
+        }
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 
+        return cm.getActiveNetworkInfo() != null &&
+                cm.getActiveNetworkInfo().isConnectedOrConnecting();
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -173,11 +191,11 @@ public class MainActivity extends AppCompatActivity implements HomeListFragment.
      */
     private void showSnackbar(final int mainTextStringId, final int actionStringId,
                               View.OnClickListener listener) {
-//        Snackbar.make(
-//                findViewById(android.R.id.content),
-//                getString(mainTextStringId),
-//                Snackbar.LENGTH_INDEFINITE)
-//                .setAction(getString(actionStringId), listener).show();
+        Snackbar.make(
+                findViewById(R.id.content),
+                getString(mainTextStringId),
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(actionStringId), listener).show();
     }
 
 
