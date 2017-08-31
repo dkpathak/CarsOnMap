@@ -69,18 +69,22 @@ public class MainActivity extends AppCompatActivity implements HomeListFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getCarsData();
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    private void getCarsData() {
         if(isOnline())
             getData();
         else{
             showSnackbar(R.string.network_error, R.string.retry, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getData();
+                    getCarsData();
                 }
             });
         }
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     public boolean isOnline() {
